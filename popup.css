@@ -5,7 +5,7 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: Georgia, serif;
-  background-color: #242425;
+  background-color: #212121;
   width: 350px;
   height: 350px;
   overflow: hidden;
@@ -14,7 +14,7 @@ html, body {
 
 .popup-container {
   padding: 15px;
-  border: 4px solid #5f6974;
+  border: 4px solid #181819;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -46,6 +46,7 @@ textarea {
   border: 3px solid #0d991b;
   resize: none;
   box-sizing: border-box;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
 }
 
 .footer { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
@@ -99,7 +100,7 @@ textarea {
   border-radius: 100px;
   position: relative;
   box-shadow:
-    0 0 calc(var(--active)*4em) calc(var(--active)*2em) hsl(var(--hue) 60% 55% / 0.75),
+    0 0 calc(var(--active)*1em) calc(var(--active)*0.5em) hsl(var(--hue) 60% 55% / 0.75),
     0 0.05em 0 0 hsl(var(--hue) calc(var(--active)*40%) calc((var(--active)*50%) + 30%)) inset,
     0 -0.05em 0 0 hsl(var(--hue) calc(var(--active)*40%) calc(var(--active)*60%)) inset;
   transition: box-shadow var(--transition), scale var(--transition), background var(--transition);
@@ -202,3 +203,15 @@ textarea {
   filter: saturate(0%) brightness(1.0);
 }
 
+/* only for the Search button (not Settings) */
+#submitBtn:not(:hover):not(:focus-visible) {
+  background: rgb(40, 160, 74);
+}
+#submitBtn:not(:hover):not(:focus-visible) .backdrop {
+  background: white;
+}
+/* optional: ensure the text is readable on white */
+#submitBtn:not(:hover):not(:focus-visible) .text {
+  background: none;
+  color: black;
+}
