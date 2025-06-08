@@ -1,4 +1,3 @@
-/*  ───────── ORIGINAL LOGIC – unchanged ───────── */
 document.addEventListener("DOMContentLoaded", () => {
   const submitBtn  = document.getElementById("submitBtn");
   const userInput  = document.getElementById("userInput");
