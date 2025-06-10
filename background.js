@@ -1,16 +1,26 @@
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "TEXT_SELECTED") {
-    fetch("http://localhost:8000/analyze", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: message.data })
-    })
-    .then((res) => res.json())
-    .then((data) => {
-      chrome.runtime.sendMessage({
-        action: "DISPLAY_RESULT",
-        data: `${data.label} (Confidence: ${data.score.toFixed(2)})`
-      });
-    });
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id:        "find-sources",
+    title:     "Find Sources with VerifyIT",
+    contexts:  ["selection"]
+  });
+});
+
+// Listen for clicks on that menu entry
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === "find-sources" && info.selectionText) {
+    const highlightedText = info.selectionText;
+    const popupUrl = chrome.runtime.getURL(
+      `popup.html?text=${encodeURIComponent(highlightedText)}`
+    );
+
+    // Open your popup.html as its own small window
+chrome.windows.create({
+  url:    popupUrl,
+  type:   "popup",
+  width:  350,
+  height: 400,
+});
   }
 });

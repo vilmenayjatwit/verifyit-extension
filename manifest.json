@@ -1,17 +1,12 @@
 {
-  "manifest_version": 3,
   "name": "VerifyIT",
   "version": "1.0",
-  "description": "Highlight text to get instant fact-checking.",
-  "permissions": ["activeTab", "scripting", "storage", "contextMenus"],
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
-    }
-  },
+  "manifest_version": 3,
+  "permissions": [
+    "contextMenus",
+    "storage",
+    "activeTab"
+  ],
   "background": {
     "service_worker": "background.js"
   },

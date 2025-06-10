@@ -1,50 +1,67 @@
+// popup.js
+
 document.addEventListener("DOMContentLoaded", () => {
   const submitBtn  = document.getElementById("submitBtn");
   const userInput  = document.getElementById("userInput");
   const resultsDiv = document.getElementById("results");
   const errorText  = document.getElementById("error");
 
-  submitBtn.addEventListener("click", async () => {
-    const text = userInput.value.trim();
-
-    if (text.split(/\s+/).length < 30) {
-      errorText.textContent = "Please enter at least 30 words.";
-      resultsDiv.innerHTML = "";
-      return;
-    }
-
-    errorText.textContent = "Searching for sources...";
-    resultsDiv.innerHTML  = "";
-
+  // Centralized fetch + render, showing only top 3
+  async function fetchAndDisplay(text) {
     try {
-      const response = await fetch("http://localhost:8000/sources", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text })
-      });
+      errorText.textContent = "Searching for sources...";
+      resultsDiv.innerHTML  = "";
 
-      const data = await response.json();
+      const res = await fetch("http://localhost:8000/sources", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ text })
+      });
+      const data = await res.json();
 
       if (data.sources && data.sources.length > 0) {
         errorText.textContent = "";
-        data.sources.forEach((source, index) => {
-          const link   = document.createElement("a");
-          link.href    = source.url;
-          link.target  = "_blank";
-          link.textContent = `${index + 1}. ${source.title}`;
-          link.style.display = "block";
-          resultsDiv.appendChild(link);
-        });
+        data.sources
+          .slice(0, 3)
+          .forEach((source, i) => {
+            const link = document.createElement("a");
+            link.href          = source.url;
+            link.target        = "_blank";
+            link.textContent   = `${i + 1}. ${source.title}`;
+            link.style.display = "block";
+            resultsDiv.appendChild(link);
+          });
       } else {
         errorText.textContent = "No sources have been found.";
       }
-    } catch (error) {
+    } catch (err) {
+      console.error(err);
       errorText.textContent = "An error occurred. Please try again.";
-      console.error(error);
     }
+  }
+
+  // Wrap your existing manual-submit logic
+  submitBtn.addEventListener("click", () => {
+    const text = userInput.value.trim();
+    if (text.split(/\s+/).length < 30) {
+      errorText.textContent = "Please enter at least 30 words.";
+      resultsDiv.innerHTML  = "";
+      return;
+    }
+    fetchAndDisplay(text);
   });
 
-  /* ───── NEW: scatter sparkle particles with randomised props ───── */
+  const params = new URLSearchParams(window.location.search);
+  const prefill = params.get("text");
+  if (prefill) {
+    // Show the user what was selected
+    userInput.value = prefill;
+
+    // Kick off the search right away (skip 30-word check)
+    fetchAndDisplay(prefill);
+  }
+
+  // ───── Particle sparkle  ─────
   const RANDOM = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
   document.querySelectorAll(".particle").forEach(p => {
     p.setAttribute("style", `
