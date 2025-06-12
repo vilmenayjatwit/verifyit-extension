@@ -1,6 +1,11 @@
 document.addEventListener("mouseup", () => {
-  const selectedText = window.getSelection().toString().trim();
+  const selection = window.getSelection();
+  const selectedText = selection ? selection.toString().trim() : "";
+
   if (selectedText.length > 0) {
-    chrome.runtime.sendMessage({ action: "TEXT_SELECTED", data: selectedText });
+    chrome.runtime.sendMessage({
+      action: "TEXT_SELECTED",
+      data: selectedText
+    });
   }
 });

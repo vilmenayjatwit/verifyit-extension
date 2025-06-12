@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/vilmenayjatwit/verifyit-extension#readme",
   "devDependencies": {
+    "@types/chrome": "^0.0.326",
     "typescript": "^5.8.3"
   }
 }
