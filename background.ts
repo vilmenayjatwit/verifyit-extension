@@ -1,3 +1,4 @@
+// Setup context menu when the extension is installed
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "find-sources",
@@ -6,7 +7,7 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-// Listen for clicks on that menu entry
+// Listen for context menu click
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "find-sources" && info.selectionText) {
     const highlightedText: string = info.selectionText;
@@ -20,5 +21,12 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       width: 350,
       height: 400
     });
+  }
+});
+
+// 🔁 Global command listener (outside the context menu block)
+chrome.commands.onCommand.addListener((command) => {
+  if (command === "reload-extension") {
+    chrome.runtime.reload();
   }
 });

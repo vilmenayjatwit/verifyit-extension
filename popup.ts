@@ -1,86 +1,198 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // Non-null assertions (!) ensure TS knows these exist
-  const submitBtn = document.getElementById("submitBtn")! as HTMLButtonElement;
-  const userInput = document.getElementById("userInput")! as HTMLInputElement;
-  const resultsDiv = document.getElementById("results")! as HTMLDivElement;
-  const errorText = document.getElementById("error")! as HTMLDivElement;
+.header {
+  margin-bottom: 20px;    /* space below the title */
+}
 
-  // Centralized fetch + render, pulling from Flask
-  async function fetchAndDisplay(text: string): Promise<void> {
-    try {
-      errorText.textContent = "Searching for sources...";
-      resultsDiv.innerHTML = "";
+#userInput {
+  margin-bottom: 12px;    /* space below the text area */
+}
 
-      const res = await fetch("http://localhost:8000/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: text }) // Flask expects "query"
-      });
+.footer {
+  margin-top: 12px;       /* space above the buttons */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-      const data = await res.json();
-      console.log("Raw SerpAPI response:", data);
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Georgia, serif;
+  background-color: #212121;
+  width: 350px;
+  height: 400px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
 
-      if (data.organic_results && Array.isArray(data.organic_results)) {
-        errorText.textContent = "";
-        data.organic_results
-          .slice(0, 3)
-          .forEach((result: any, i: number) => {
-            const link = document.createElement("a");
-            link.href = result.link || "#";
-            link.target = "_blank";
-            link.textContent = `${i + 1}. ${result.title || "Untitled"}`;
-            link.style.display = "block";
-            resultsDiv.appendChild(link);
-          });
-      } else {
-        errorText.textContent = "No sources have been found.";
-      }
-    } catch (err) {
-      console.error("Fetch error:", err);
-      errorText.textContent = "An error occurred. Please try again.";
-    }
-  }
+.popup-container {
+  padding: 15px;
+  border: 4px solid #181819;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;        /* added proper spacing between elements */
+}
 
-  // Manual submission
-  submitBtn.addEventListener("click", () => {
-    const text = userInput.value.trim();
-    if (text.split(/\s+/).length < 30) {
-      errorText.textContent = "Please enter at least 30 words.";
-      resultsDiv.innerHTML = "";
-      return;
-    }
-    fetchAndDisplay(text);
-  });
+.header { display: flex; justify-content: space-between; align-items: center; }
+h1 { font-size: 40px; margin: -2; }
+.verify { color: #ffffff; }
+.it { color: #0d991b; }
 
-  // Prefill from query string
-  const params = new URLSearchParams(window.location.search);
-  const prefill = params.get("text");
-  if (prefill) {
-    userInput.value = prefill;
-    fetchAndDisplay(prefill);
-  }
+textarea {
+  width: 100%;
+  height: 160px;
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 14px;
+  border: 3px solid #0d991b;
+  resize: none;
+  box-sizing: border-box;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
+}
 
-  // ───── Particle sparkle ─────
-  const RANDOM = (min: number, max: number): number =>
-    Math.floor(Math.random() * (max - min + 1) + min);
+.settings-btn {
+  background-color: transparent;
+  border: 3px solid #2f3e4e;
+  border-radius: 50%;
+  font-size: 22px;
+  width: 40px;
+  height: 40px;
+  color: #2f3e4e;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  document.querySelectorAll<HTMLElement>(".particle").forEach(p => {
-    p.setAttribute(
-      "style",
-      `
-      --x:${RANDOM(20, 80)};
-      --y:${RANDOM(20, 80)};
-      --duration:${RANDOM(6, 20)};
-      --delay:${RANDOM(1, 10)};
-      --alpha:${RANDOM(40, 90) / 100};
-      --origin-x:${
-        Math.random() > 0.5 ? RANDOM(300, 800) * -1 : RANDOM(300, 800)
-      }%;
-      --origin-y:${
-        Math.random() > 0.5 ? RANDOM(300, 800) * -1 : RANDOM(300, 800)
-      }%;
-      --size:${RANDOM(40, 90) / 100};
-    `
-    );
-  });
-});
+.error-msg { color: red; font-size: 13px; margin-top: 10px; }
+.results-box { margin-top: 10px; font-size: 14px; }
+
+:root {
+  --transition: 0.25s;
+  --spark: 1.8s;
+  --hue: 120;
+}
+
+.sparkle-button { position: relative; }
+
+.search-btn {
+  --cut: 0.1em;
+  --active: 0;
+  --bg: radial-gradient(40% 50% at center 100%, hsl(var(--hue) calc(var(--active)*40%) 75%/var(--active)), transparent),
+         radial-gradient(80% 100% at center 120%, hsl(var(--hue) calc(var(--active)*40%) 65%/var(--active)), transparent),
+         hsl(var(--hue) calc(var(--active)*40%) calc((var(--active)*40%) + 22%));
+  background: var(--bg);
+  font-size: 16px;
+  font-weight: 500;
+  border: 0;
+  cursor: pointer;
+  padding: 0.7em 1.1em;
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  white-space: nowrap;
+  border-radius: 100px;
+  position: relative;
+  box-shadow:
+    0 0 calc(var(--active)*1em) calc(var(--active)*0.5em) hsl(var(--hue) 60% 55% / 0.75),
+    0 0.05em 0 0 hsl(var(--hue) calc(var(--active)*40%) calc((var(--active)*50%) + 30%)) inset,
+    0 -0.05em 0 0 hsl(var(--hue) calc(var(--active)*40%) calc(var(--active)*60%)) inset;
+  transition: box-shadow var(--transition), scale var(--transition), background var(--transition);
+  scale: calc(1 + var(--active)*0.07);
+}
+
+.search-btn:active { scale: 1; }
+
+.search-btn svg { inline-size: 1.2em; translate: -22% -5%; }
+
+.search-btn .text {
+  translate: 2% -6%;
+  letter-spacing: 0.01ch;
+  background: linear-gradient(90deg,
+              hsl(0 0% calc((var(--active)*100%) + 85%)),
+              hsl(0 0% calc((var(--active)*100%) + 40%)));
+  -webkit-background-clip: text;
+  color: transparent;
+  transition: background var(--transition);
+}
+
+.search-btn:before {
+  content: "";
+  position: absolute;
+  inset: -0.25em;
+  z-index: -1;
+  border: 0.25em solid hsl(var(--hue) 60% 45% / 0.5);
+  border-radius: 100px;
+  opacity: var(--active, 0);
+  transition: opacity var(--transition);
+}
+
+.spark { position: absolute; inset: 0; border-radius: 100px; rotate: 0deg;
+         overflow: hidden; mask: linear-gradient(white, transparent 50%);
+         animation: flip calc(var(--spark)*2) infinite steps(2,end); }
+@keyframes flip { to { rotate: 360deg; } }
+.spark:before { content: ""; position: absolute; width: 200%; aspect-ratio: 1;
+                top: 0%; left: 50%; translate: -50% -15%;
+                transform: rotate(-90deg);
+                opacity: calc(var(--active) + 0.4);
+                background: conic-gradient(from 0deg, transparent 0 340deg, white  360deg);
+                transition: opacity var(--transition);
+                animation: rotate var(--spark) linear infinite both; }
+@keyframes rotate { to { transform: rotate(90deg); } }
+.spark:after { content: ""; position: absolute; inset: var(--cut); border-radius: 100px; }
+
+.backdrop { position: absolute; inset: var(--cut); background: var(--bg);
+            border-radius: 100px; transition: background var(--transition); }
+
+.sparkle path { color: hsl(0 0% calc((var(--active,0)*70%) + var(--base)));
+                transform-box: fill-box; transform-origin: center;
+                fill: currentColor; stroke: currentColor;
+                animation-delay: calc((var(--transition)*1.5) + (var(--delay)*1s));
+                animation-duration: 0.6s; transition: color var(--transition); }
+.search-btn:is(:hover, :focus-visible) path { animation-name: bounce; }
+@keyframes bounce { 35%, 65% { scale: var(--scale); } }
+.sparkle path:nth-of-type(1) { --scale: .5; --delay: .1; --base: 40%; }
+.sparkle path:nth-of-type(2) { --scale: 1.5; --delay: .2; --base: 20%; }
+.sparkle path:nth-of-type(3) { --scale: 2.5; --delay: .35; --base: 30%; }
+
+.particle-pen { position: absolute; width: 200%; aspect-ratio: 1;
+                top: 50%; left: 50%; translate: -50% -50%;
+                -webkit-mask: radial-gradient(white, transparent 65%);
+                z-index: -1; opacity: var(--active,0);
+                transition: opacity var(--transition); }
+.particle { fill: white; width: calc(var(--size,0.25)*1rem); aspect-ratio: 1;
+            position: absolute; top: calc(var(--y)*1%); left: calc(var(--x)*1%);
+            opacity: var(--alpha,1); animation: float-out calc(var(--duration,1)*1s)
+                     calc(var(--delay)*-1s) infinite linear;
+            transform-origin: var(--origin-x,1000%) var(--origin-y,1000%);
+            z-index: -1; animation-play-state: var(--play-state,paused); }
+.particle:nth-of-type(even) { animation-direction: reverse; }
+@keyframes float-out { to { rotate: 360deg; } }
+
+.search-btn:is(:hover,:focus-visible),
+.search-btn:is(:hover,:focus-visible) ~ .bodydrop,
+.search-btn:is(:hover,:focus-visible) ~ .particle-pen {
+  --active: 1;
+  --play-state: running;
+}
+.bodydrop { position: fixed; inset: 0; z-index: -1; }
+
+.search-icon { display: none; }
+
+.no-halo .bodydrop {
+  display: none;
+}
+
+#settingsWrapper .search-btn {
+  filter: saturate(0%) brightness(1.0);
+}
+
+#submitBtn:not(:hover):not(:focus-visible) {
+  background: rgb(40, 160, 74);
+}
+#submitBtn:not(:hover):not(:focus-visible) .backdrop {
+  background: white;
+}
+#submitBtn:not(:hover):not(:focus-visible) .text {
+  background: none;
+  color: black;
+}
