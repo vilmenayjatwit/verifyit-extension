@@ -9,36 +9,48 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 document.addEventListener("DOMContentLoaded", () => {
-    // Non-null assertions (!) ensure TS knows these exist
+    // Scenes
+    const searchScene = document.getElementById("searchScene");
+    const resultsScene = document.getElementById("resultsScene");
+    const resultsList = document.getElementById("resultsList");
+    const backBtn = document.getElementById("backBtn");
+    // Original elements
     const submitBtn = document.getElementById("submitBtn");
     const userInput = document.getElementById("userInput");
-    const resultsDiv = document.getElementById("results");
     const errorText = document.getElementById("error");
+    // Wire up Back button
+    backBtn.addEventListener("click", () => {
+        resultsList.innerHTML = "";
+        resultsScene.style.display = "none";
+        searchScene.style.display = "block";
+        errorText.textContent = "";
+    });
     // Centralized fetch + render, pulling from Flask
     function fetchAndDisplay(text) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 errorText.textContent = "Searching for sources...";
-                resultsDiv.innerHTML = "";
+                resultsList.innerHTML = "";
                 const res = yield fetch("http://localhost:8000/search", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ query: text }) // Flask expects "query"
+                    body: JSON.stringify({ query: text })
                 });
                 const data = yield res.json();
                 console.log("Raw SerpAPI response:", data);
                 if (data.organic_results && Array.isArray(data.organic_results)) {
                     errorText.textContent = "";
-                    data.organic_results
-                        .slice(0, 3)
-                        .forEach((result, i) => {
+                    data.organic_results.slice(0, 3).forEach((result, i) => {
                         const link = document.createElement("a");
                         link.href = result.link || "#";
                         link.target = "_blank";
                         link.textContent = `${i + 1}. ${result.title || "Untitled"}`;
                         link.style.display = "block";
-                        resultsDiv.appendChild(link);
+                        resultsList.appendChild(link);
                     });
+                    // swap scenes
+                    searchScene.style.display = "none";
+                    resultsScene.style.display = "block";
                 }
                 else {
                     errorText.textContent = "No sources have been found.";
@@ -53,11 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Manual submission
     submitBtn.addEventListener("click", () => {
         const text = userInput.value.trim();
-        if (text.split(/\s+/).length < 30) {
-            errorText.textContent = "Please enter at least 30 words.";
-            resultsDiv.innerHTML = "";
-            return;
-        }
         fetchAndDisplay(text);
     });
     // Prefill from query string

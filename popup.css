@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Scripto-2OR2v';
+  src: url('fonts/Scripto-2OR2v.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Radeil';
+  src: url('fonts/Radeil.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .header {
   margin-bottom: 1px;    /* space below the title */
   display: flex;
@@ -10,7 +24,7 @@
   width: 200px;
   height: 80px;
   object-fit: contain;
-  margin-left: 30px;
+  margin-left: 15px;
 }
 
 
@@ -19,7 +33,7 @@
 }
 
 .footer {
-  margin-top: 5px;       /* space above the buttons */
+  margin-top: 15px;       /* space above the buttons */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -29,37 +43,47 @@ html, body {
   /* left text box */
   margin: 0;
   padding: 0;
-  font-family: sans-serif, serif;
+  font-family: 'Scripto-2OR2v', sans-serif;
   background-color: #212121;
-  width: 350px;
-  height: 500px;
-  overflow: hidden;
   box-sizing: border-box;
 }
 
 .popup-container {
-  padding: 21px;
-  border: 4px solid #181819;
+  width: 332px;
+  height: 368px;            /* desired total popup size */
+  box-sizing: border-box;   /* so padding & border are included in that 360px */
+  padding: 10px 21px 21px 21px;
+  border: 8px solid #282828;
   display: flex;
   flex-direction: column;
-  gap: 15px;        /* added proper spacing between elements */
+  gap: 15px;
+  overflow: hidden;
 }
 
-h1 { font-size: 50px; margin: 0; text-shadow: 2px 2px 4px rgba(0, 0, 0, 1); }
-.verify { color: #ffffff; }
-.it { color: #11981f; }
+h1 { font-size: 47px; margin: 0;}
+.verify {
+  color: #ffffff;
+  text-shadow: 2px 3px 1px #11981f; /* only the green glow now */
+}
+
+.it {
+  color: #11981f;
+  text-shadow: 2px 4px 1px #ffffff; /* only the white glow now */
+}
+
+
 
 textarea {
   width: 100%;
   height: 173px;
   margin: 10px 5;
   padding: 10px;
-  border-radius: 12px;
+  border-radius: 20px;
   font-size: 14px;
-  border: 4px solid #0d991b;
+  border: 5px solid #0d991b;
   resize: none;
   box-sizing: border-box;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
+  box-shadow: 0 0px 10px rgba(0, 0, 0, 1);
 }
 
 .settings-btn {
@@ -76,7 +100,14 @@ textarea {
   justify-content: center;
 }
 
-.error-msg { color: red; font-size: 13px; margin-top: 10px; }
+.error-msg {
+  color: rgb(232, 72, 72);
+  font-size: 13px;
+  margin-top: 5px;     /* was 10px, now smaller */
+  margin-bottom: 0px;  /* prevent excess space */
+  padding-bottom: 5px; /* optional: space inside the box */
+  text-align: left;  /* optional: center the message */
+}
 .results-box { margin-top: 10px; font-size: 14px; }
 
 :root {
@@ -125,6 +156,8 @@ textarea {
               hsl(0 0% calc((var(--active)*100%) + 40%)));
   -webkit-background-clip: text;
   color: transparent;
+  font-weight: bold;
+  font-size: 20px;
   transition: background var(--transition);
 }
 
@@ -209,4 +242,16 @@ textarea {
 #submitBtn:not(:hover):not(:focus-visible) .text {
   background: none;
   color: black;
+}
+
+#resultsTitle {
+  color: #ffffff; /* Change to your desired color */
+  font-size: 36px;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8); /* optional: for better contrast */
+  margin-bottom: 10px;
+}
+
+.header h1 {
+  /* casts a black shadow 6px down, 4px blur */
+  filter: drop-shadow(4px 5px 2px rgba(0, 0, 0, 0.7));
 }
