@@ -6,9 +6,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const backBtn      = document.getElementById("backBtn")! as HTMLButtonElement;
 
   // Original elements
-  const submitBtn  = document.getElementById("submitBtn")! as HTMLButtonElement;
-  const userInput  = document.getElementById("userInput")! as HTMLInputElement;
-  const errorText  = document.getElementById("error")! as HTMLDivElement;
+  const submitBtn = document.getElementById("submitBtn")! as HTMLButtonElement;
+  const userInput = document.getElementById("userInput")! as HTMLInputElement;
+  const errorText = document.getElementById("error")! as HTMLDivElement;
 
   // Wire up Back button
   backBtn.addEventListener("click", () => {
@@ -18,53 +18,54 @@ document.addEventListener("DOMContentLoaded", () => {
     errorText.textContent = "";
   });
 
-// Centralized fetch + render, pulling from Flask
-async function fetchAndDisplay(text: string): Promise<void> {
-  try {
-    errorText.textContent = "Searching for sources...";
-    resultsList.innerHTML = "";
+  // Centralized fetch + render, pulling from Flask
+  async function fetchAndDisplay(text: string): Promise<void> {
+    try {
+      errorText.textContent = "Searching for sources...";
+      resultsList.innerHTML = "";
 
-    const res = await fetch("http://localhost:8000/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: text })
-    });
+      const res = await fetch("http://localhost:8000/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: text })
+      });
 
-    const data = await res.json();
-    console.log("Raw SerpAPI response:", data);
+      const data = await res.json();
+      console.log("Raw SerpAPI response:", data);
 
-    if (data.organic_results && Array.isArray(data.organic_results)) {
-      errorText.textContent = "";
-      data.organic_results
-        .slice(0, 3)
-        .forEach((result: any, i: number) => {
-          const link = document.createElement("a");
-          link.href = result.link || "#";
-          link.target = "_blank";
-          link.textContent = `${i + 1}. ${result.title || "Untitled"}`;
-          link.style.display = "block";
-          resultsList.appendChild(link);
+      if (data.organic_results && Array.isArray(data.organic_results)) {
+        errorText.textContent = "";
+
+        // --- NEW: render each result as a styled "card" ---
+
+        data.organic_results.slice(0, 3).forEach((result: any) => {
+          const card = document.createElement("a");
+          card.className   = "result-card";          // picks up your CSS
+          card.href        = result.link || "#";
+          card.target      = "_blank";
+          card.rel         = "noopener noreferrer";  // security best practice
+          card.textContent = result.title || "Untitled";
+          resultsList.appendChild(card);
         });
-      // ← removed the swap from here
-    } else {
-      errorText.textContent = "No sources have been found.";
+
+      } else {
+        errorText.textContent = "No sources have been found.";
+      }
+    } catch (err) {
+      console.error("Fetch error:", err);
+      errorText.textContent = "An error occurred. Please try again.";
+    } finally {
+      // always swap scenes, regardless of success, "no results", or error
+      searchScene.style.display  = "none";
+      resultsScene.style.display = "block";
     }
-  } catch (err) {
-    console.error("Fetch error:", err);
-    errorText.textContent = "An error occurred. Please try again.";
-  } finally {
-    // always swap scenes, regardless of success, "no results", or error
-    searchScene.style.display  = "none";
-    resultsScene.style.display = "block";
   }
-}
 
   // Manual submission
-submitBtn.addEventListener("click", () => {
-  const text = userInput.value.trim();
-  fetchAndDisplay(text);
-});
-
+  submitBtn.addEventListener("click", () => {
+    const text = userInput.value.trim();
+    fetchAndDisplay(text);
+  });
 
   // Prefill from query string
   const params = new URLSearchParams(window.location.search);
@@ -82,15 +83,19 @@ submitBtn.addEventListener("click", () => {
     p.setAttribute(
       "style",
       `
-      --x:${RANDOM(20, 80)};
-      --y:${RANDOM(20, 80)};
-      --duration:${RANDOM(6, 20)};
-      --delay:${RANDOM(1, 10)};
-      --alpha:${RANDOM(40, 90) / 100};
-      --origin-x:${Math.random() > 0.5 ? RANDOM(300, 800) * -1 : RANDOM(300, 800)}%;
-      --origin-y:${Math.random() > 0.5 ? RANDOM(300, 800) * -1 : RANDOM(300, 800)}%;
-      --size:${RANDOM(40, 90) / 100};
-    `
+        --x:${RANDOM(20, 80)};
+        --y:${RANDOM(20, 80)};
+        --duration:${RANDOM(6, 20)};
+        --delay:${RANDOM(1, 10)};
+        --alpha:${RANDOM(40, 90) / 100};
+        --origin-x:${
+          Math.random() > 0.5 ? RANDOM(300, 800) * -1 : RANDOM(300, 800)
+        }%;
+        --origin-y:${
+          Math.random() > 0.5 ? RANDOM(300, 800) * -1 : RANDOM(300, 800)
+        }%;
+        --size:${RANDOM(40, 90) / 100};
+      `
     );
   });
 });

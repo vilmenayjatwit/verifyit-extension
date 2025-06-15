@@ -40,17 +40,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("Raw SerpAPI response:", data);
                 if (data.organic_results && Array.isArray(data.organic_results)) {
                     errorText.textContent = "";
-                    data.organic_results
-                        .slice(0, 3)
-                        .forEach((result, i) => {
-                        const link = document.createElement("a");
-                        link.href = result.link || "#";
-                        link.target = "_blank";
-                        link.textContent = `${i + 1}. ${result.title || "Untitled"}`;
-                        link.style.display = "block";
-                        resultsList.appendChild(link);
+                    // --- NEW: render each result as a styled "card" ---
+                    data.organic_results.slice(0, 3).forEach((result) => {
+                        const card = document.createElement("a");
+                        card.className = "result-card"; // picks up your CSS
+                        card.href = result.link || "#";
+                        card.target = "_blank";
+                        card.rel = "noopener noreferrer"; // security best practice
+                        card.textContent = result.title || "Untitled";
+                        resultsList.appendChild(card);
                     });
-                    // ← removed the swap from here
                 }
                 else {
                     errorText.textContent = "No sources have been found.";
@@ -83,14 +82,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const RANDOM = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
     document.querySelectorAll(".particle").forEach(p => {
         p.setAttribute("style", `
-      --x:${RANDOM(20, 80)};
-      --y:${RANDOM(20, 80)};
-      --duration:${RANDOM(6, 20)};
-      --delay:${RANDOM(1, 10)};
-      --alpha:${RANDOM(40, 90) / 100};
-      --origin-x:${Math.random() > 0.5 ? RANDOM(300, 800) * -1 : RANDOM(300, 800)}%;
-      --origin-y:${Math.random() > 0.5 ? RANDOM(300, 800) * -1 : RANDOM(300, 800)}%;
-      --size:${RANDOM(40, 90) / 100};
-    `);
+        --x:${RANDOM(20, 80)};
+        --y:${RANDOM(20, 80)};
+        --duration:${RANDOM(6, 20)};
+        --delay:${RANDOM(1, 10)};
+        --alpha:${RANDOM(40, 90) / 100};
+        --origin-x:${Math.random() > 0.5 ? RANDOM(300, 800) * -1 : RANDOM(300, 800)}%;
+        --origin-y:${Math.random() > 0.5 ? RANDOM(300, 800) * -1 : RANDOM(300, 800)}%;
+        --size:${RANDOM(40, 90) / 100};
+      `);
     });
 });
