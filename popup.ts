@@ -18,24 +18,26 @@ document.addEventListener("DOMContentLoaded", () => {
     errorText.textContent = "";
   });
 
-  // Centralized fetch + render, pulling from Flask
-  async function fetchAndDisplay(text: string): Promise<void> {
-    try {
-      errorText.textContent = "Searching for sources...";
-      resultsList.innerHTML = "";
+// Centralized fetch + render, pulling from Flask
+async function fetchAndDisplay(text: string): Promise<void> {
+  try {
+    errorText.textContent = "Searching for sources...";
+    resultsList.innerHTML = "";
 
-      const res = await fetch("http://localhost:8000/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: text })
-      });
+    const res = await fetch("http://localhost:8000/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: text })
+    });
 
-      const data = await res.json();
-      console.log("Raw SerpAPI response:", data);
+    const data = await res.json();
+    console.log("Raw SerpAPI response:", data);
 
-      if (data.organic_results && Array.isArray(data.organic_results)) {
-        errorText.textContent = "";
-        data.organic_results.slice(0, 3).forEach((result: any, i: number) => {
+    if (data.organic_results && Array.isArray(data.organic_results)) {
+      errorText.textContent = "";
+      data.organic_results
+        .slice(0, 3)
+        .forEach((result: any, i: number) => {
           const link = document.createElement("a");
           link.href = result.link || "#";
           link.target = "_blank";
@@ -43,17 +45,19 @@ document.addEventListener("DOMContentLoaded", () => {
           link.style.display = "block";
           resultsList.appendChild(link);
         });
-        // swap scenes
-        searchScene.style.display  = "none";
-        resultsScene.style.display = "block";
-      } else {
-        errorText.textContent = "No sources have been found.";
-      }
-    } catch (err) {
-      console.error("Fetch error:", err);
-      errorText.textContent = "An error occurred. Please try again.";
+      // ← removed the swap from here
+    } else {
+      errorText.textContent = "No sources have been found.";
     }
+  } catch (err) {
+    console.error("Fetch error:", err);
+    errorText.textContent = "An error occurred. Please try again.";
+  } finally {
+    // always swap scenes, regardless of success, "no results", or error
+    searchScene.style.display  = "none";
+    resultsScene.style.display = "block";
   }
+}
 
   // Manual submission
 submitBtn.addEventListener("click", () => {

@@ -49,15 +49,20 @@ html, body {
 }
 
 .popup-container {
+  position: relative;   /* create stacking context */
+  z-index: 0;    
   width: 332px;
   height: 368px;            /* desired total popup size */
   box-sizing: border-box;   /* so padding & border are included in that 360px */
   padding: 10px 21px 21px 21px;
   border: 8px solid #282828;
+  background: url('images/bg.png') no-repeat center center;
+  background-size: cover;   /* fills the container without distortion */
   display: flex;
   flex-direction: column;
   gap: 15px;
   overflow: hidden;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.75)
 }
 
 h1 { font-size: 47px; margin: 0;}
@@ -99,6 +104,23 @@ textarea {
   align-items: center;
   justify-content: center;
 }
+
+.paint-splatter {
+  position: absolute;
+  /* ------- control these ------- */
+  top: 20px;           /* distance from container’s top */
+  left: 180px;         /* distance from container’s left */
+  width: 120px;        /* how big the splatter is */
+  height: 120px;       /* aspect ratio is maintained by background-size */
+  transform: rotate(15deg);  /* rotate for style */
+  /* ----------------------------- */
+
+  background: url('images/paint.png') no-repeat center center;
+  background-size: contain;
+  pointer-events: none; /* so it doesn’t block clicks */
+  z-index: -1;           /* sits above your popup‐container background but below your UI text/buttons */
+}
+
 
 .error-msg {
   color: rgb(232, 72, 72);
@@ -254,4 +276,127 @@ textarea {
 .header h1 {
   /* casts a black shadow 6px down, 4px blur */
   filter: drop-shadow(4px 5px 2px rgba(0, 0, 0, 0.7));
+}
+
+/* ─── RESULTS PAGE OVERRIDES ─── */
+
+/* ─── Results Header ─── */
+/* ─── RESULTS PAGE (block layout) ─── */
+
+/* Center the title */
+.header.results-header {
+  display: block;
+  text-align: center;
+  margin-bottom: 16px;  /* space below title */
+}
+
+/* Articles Found: */
+#resultsTitle {
+  font-family: 'Scripto-2OR2v', cursive;
+  font-size: 35px;
+  color: #fff;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* Stack the three cards — centered and spaced */
+.results-box {
+  display: block;
+  width: 100%;
+  padding: 0 20px;       /* horizontal padding */
+  box-sizing: border-box;
+  margin: 0 auto;        /* center container */
+}
+.result-card {
+  display: block;
+  width: 100%;
+  max-width: 280px;      /* optional: cap width */
+  margin: 12px auto;     /* vertical gap & center */
+  padding: 16px;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  text-align: center;
+  color: #000;
+  background: #fff;
+  border: 3px solid #0d991b;
+  border-radius: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  box-sizing: border-box;
+}
+.result-card:hover {
+  background: rgba(13, 153, 27, 0.1);
+  transform: translateY(-2px);
+}
+
+/* BACK BUTTON — block & nudgeable via margins */
+#backWrapper {
+  display: block;
+  /* ← change these two values to move your Back button: */
+  margin-left: 0px;     /* ← move it right/left */
+  margin-top: 95px;      /* ← move it down/up */
+  margin-bottom: 0;      /* space below if needed */
+}
+
+#backWrapper .search-btn {
+  /* increase these to make the pill bigger */
+  padding: 1em 1em;      /* vertical | horizontal padding */
+  font-size: 10px;       /* text size */
+}
+
+
+/* ─── (cards container and .result-card rules follow) ─── */
+
+
+/* The three-card stack */
+.results-box {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* White cards with green border */
+.result-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  color: #000;
+  text-decoration: none;
+  background: #fff;
+  border: 3px solid #0d991b;
+  border-radius: 12px;
+  padding: 16px;
+  transition: background 0.2s, transform 0.1s;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.result-card:hover {
+  background: rgba(13, 153, 27, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Back button styled just like Settings */
+.results-header .sparkle-button {
+  margin: 0;
+}
+.results-header .search-btn {
+  --cut: 0.15em;
+  font-size: 16px;
+  padding: 0.5em 1em;
+}
+.results-header .search-btn .backdrop {
+  background: #0d991b;
+}
+.results-header .search-btn .text {
+  color: #fff;
+  background: none;
+}
+.results-header .search-btn path {
+  fill: white;
+  stroke: white;
 }

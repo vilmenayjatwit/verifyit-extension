@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
+  <!-- <div class="paint-splatter"></div> -->
   <div class="popup-container">
 
     <!-- SEARCH SCENE -->
@@ -58,13 +59,28 @@
     </div>
 
     <!-- RESULTS SCENE -->
-    <div id="resultsScene" style="display:none">
-      <div class="header">
-        <h1 id="resultsTitle">Results</h1>
-        <button id="backBtn" class="search-btn">← Back</button>
-      </div>
-      <div id="resultsList" class="results-box"></div>
+<div id="resultsScene" style="display:none">
+  <div class="header results-header">
+    <!-- Title wrapper -->
+    <div id="titleWrapper">
+      <h1 id="resultsTitle">Articles Found:</h1>
     </div>
+
+
+  <div id="resultsList" class="results-box"></div>
+
+  <!-- ← pasted here, under the cards -->
+  <div id="backWrapper" class="sparkle-button no-halo">
+    <button id="backBtn" class="search-btn">
+      <span class="backdrop"></span>
+      <span class="text">Back</span>
+    </button>
+    <div class="bodydrop"></div>
+    <span aria-hidden="true" class="particle-pen"></span>
+  </div>
+
+</div>
+
 
   </div>
 
