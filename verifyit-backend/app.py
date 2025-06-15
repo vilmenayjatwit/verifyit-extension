@@ -8,6 +8,9 @@ load_dotenv()
 app = Flask(__name__)
 
 SERP_API_KEY = os.getenv("SERP_API_KEY")
+if not SERP_API_KEY:
+    raise RuntimeError("⚠️  Please set SERPAPI_API_KEY in your .env file")
+
 
 @app.route("/")
 def health_check():
