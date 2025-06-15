@@ -130,7 +130,6 @@ textarea {
   padding-bottom: 5px; /* optional: space inside the box */
   text-align: left;  /* optional: center the message */
 }
-.results-box { margin-top: 10px; font-size: 14px; }
 
 :root {
   --transition: 0.25s;
@@ -300,14 +299,6 @@ textarea {
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
 }
 
-/* Stack the three cards — centered and spaced */
-.results-box {
-  display: block;
-  width: 100%;
-  padding: 0 20px;       /* horizontal padding */
-  box-sizing: border-box;
-  margin: 0 auto;        /* center container */
-}
 
 .result-card:hover {
   background: rgba(13, 153, 27, 0.1);
@@ -326,13 +317,13 @@ textarea {
 #backWrapper .search-btn {
   /* increase these to make the pill bigger */
   padding: 1em 1em;      /* vertical | horizontal padding */
-  font-size: 10px;       /* text size */
+  font-size: 5px;       /* text size */
 }
 
 
 /* The three-card stack */
 .results-box {
-  padding: 0 20px;
+  padding: 0 12px;
   display: flex;
   flex-direction: column;
   gap: 0px;
@@ -353,12 +344,13 @@ textarea {
   text-align: center;
   color: #000;
   background: #fff;
-  border: 3px solid #0d991b;
+  border: 4px solid #0d991b;
   border-radius: 12px;
   text-decoration: none;
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
   box-sizing: border-box;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .result-card:hover {
@@ -367,29 +359,54 @@ textarea {
 }
 
 /* Back button styled just like Settings */
-.results-header .sparkle-button {
-  margin: 0;
-}
+.results-header .sparkle-button { margin: 0; }
 .results-header .search-btn {
   --cut: 0.15em;
+  --hue: 120;
   font-size: 16px;
   padding: 0.5em 1em;
 }
-.results-header .search-btn .backdrop {
-  background: #0d991b;
-}
-.results-header .search-btn .text {
-  color: #fff;
-  background: none;
-}
-.results-header .search-btn path {
-  fill: white;
-  stroke: white;
+.results-header .search-btn .backdrop { background: #ffffff; }
+.results-header .search-btn .text     { color: #fff; background: none; }
+.results-header .search-btn path     { fill: white; stroke: white; }
+
+/* ── Simple green glow on result-card hover ── */
+#resultsScene .result-card {
+  transition: box-shadow 0.25s ease, transform 0.1s ease;
 }
 
-/* Force our cards (and any plain <a> inside #resultsList) into Arial */
-.result-card,
-#resultsList a {
-  font-family: Arial, sans-serif !important;
-  color: #ffffff !important;     /* or whatever color you want */
+#resultsScene .result-card:hover {
+  /* outer glow + inset for depth */
+  box-shadow:
+    0 0 2px 5px rgba(66, 222, 82, 0.8),
+    inset 0 0 5px rgba(66, 222, 82, 0.5);
+
+  /* lift up and tint background as before */
+  transform: translateY(-2px);
+  background: rgba(13, 153, 27, 0.6);
+
+  /* ensure text is legible */
+  color: #fff !important;
+  border-color: #ffffff;
 }
+
+/* Shine effect overlay on each card */
+#resultsScene .result-card {
+  position: relative;      /* create a stacking context */
+  overflow: hidden;
+}
+
+/* the pseudo-element that will hold our radial “glint” */
+#resultsScene .result-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;    /* so it never blocks clicks */
+  background: radial-gradient(
+    circle 150px at var(--x, 50%) var(--y, 50%),
+    rgba(255,255,255,0.3) 0%,
+    rgba(255,255,255,0.0) 100%
+  );
+  transition: background 0.2s ease-out;
+}
+

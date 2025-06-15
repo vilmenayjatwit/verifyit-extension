@@ -37,15 +37,30 @@ document.addEventListener("DOMContentLoaded", () => {
         errorText.textContent = "";
 
         // --- NEW: render each result as a styled "card" ---
-
         data.organic_results.slice(0, 3).forEach((result: any) => {
           const card = document.createElement("a");
-          card.className   = "result-card";          // picks up your CSS
+          card.className   = "result-card";
           card.href        = result.link || "#";
           card.target      = "_blank";
-          card.rel         = "noopener noreferrer";  // security best practice
+          card.rel         = "noopener noreferrer";
           card.textContent = result.title || "Untitled";
           resultsList.appendChild(card);
+        });
+
+        // Shine effect: track mouse over each card
+        const cards = document.querySelectorAll<HTMLAnchorElement>("#resultsList .result-card");
+        cards.forEach(card => {
+          card.addEventListener("mousemove", e => {
+            const rect = card.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top)  / rect.height) * 100;
+            card.style.setProperty("--x", `${x}%`);
+            card.style.setProperty("--y", `${y}%`);
+          });
+          card.addEventListener("mouseleave", () => {
+            card.style.setProperty("--x", "50%");
+            card.style.setProperty("--y", "50%");
+          });
         });
 
       } else {
