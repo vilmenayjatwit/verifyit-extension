@@ -3,11 +3,11 @@
     "target": "es6",
     "module": "esnext",
     "lib": ["dom", "esnext"],
-    "outDir": "dist",
+    "outDir": "frontend/dist",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["*.ts"],
-  "exclude": ["dist"]
+  "include": ["*.ts", "backend/background.ts", "backend/popup.ts"],
+  "exclude": ["frontend/dist"]
 }
