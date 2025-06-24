@@ -6,8 +6,17 @@
     "outDir": "frontend/dist",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    // make the 'chrome' namespace available
+    "types": ["chrome"]
   },
-  "include": ["*.ts", "backend/background.ts", "backend/popup.ts"],
-  "exclude": ["frontend/dist"]
+  "include": [
+    "frontend/**/*.ts",
+    "backend/**/*.ts"
+  ],
+  "exclude": [
+    "frontend/dist",
+    "node_modules"
+  ]
 }

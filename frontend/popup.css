@@ -1,13 +1,13 @@
 @font-face {
   font-family: 'Scripto-2OR2v';
-  src: url('fonts/Scripto-2OR2v.ttf') format('truetype');
+  src: url('../fonts/Scripto-2OR2v.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Radeil';
-  src: url('fonts/Radeil.otf') format('opentype');
+  src: url('../fonts/Radeil.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
@@ -56,7 +56,7 @@ html, body {
   box-sizing: border-box;   /* so padding & border are included in that 360px */
   padding: 10px 21px 21px 21px;
   border: 8px solid #282828;
-  background: url('images/bg.png') no-repeat center center;
+  background: url('../images/bg.png') no-repeat center center;
   background-size: cover;   /* fills the container without distortion */
   display: flex;
   flex-direction: column;

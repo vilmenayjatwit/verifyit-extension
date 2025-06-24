@@ -11,9 +11,9 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "find-sources" && info.selectionText) {
     const highlightedText: string = info.selectionText;
-    const popupUrl: string = chrome.runtime.getURL(
-      `popup.html?text=${encodeURIComponent(highlightedText)}`
-    );
+    const popupUrl = chrome.runtime.getURL(
+      `frontend/popup.html?text=${encodeURIComponent(highlightedText)}`
+    ) 
 
     chrome.windows.create({
       url: popupUrl,
