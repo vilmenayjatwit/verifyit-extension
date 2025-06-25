@@ -4,6 +4,7 @@
   "description": "VerifyIT is a Chrome browser extension that helps users assess the credibility of online information. By highlighting text on a webpage, users receive instant fact-checking results based on a fine-tuned NLP model and trusted fact-checking APIs.",
   "main": "index.js",
   "scripts": {
+    "build": "webpack --config webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +20,13 @@
   "homepage": "https://github.com/vilmenayjatwit/verifyit-extension#readme",
   "devDependencies": {
     "@types/chrome": "^0.0.326",
-    "typescript": "^5.8.3"
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.3",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@tensorflow-models/universal-sentence-encoder": "^1.3.3",
+    "@tensorflow/tfjs": "^4.22.0"
   }
 }
