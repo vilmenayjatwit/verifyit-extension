@@ -91,7 +91,7 @@ textarea {
   box-shadow: 0 0px 10px rgba(0, 0, 0, 1);
 }
 
-.settings-btn {
+.bookmarks-btn {
   background-color: transparent;
   border: 3px solid #2f3e4e;
   border-radius: 50%;
@@ -249,7 +249,7 @@ textarea {
   display: none;
 }
 
-#settingsWrapper .search-btn {
+#bookmarksWrapper .search-btn {
   margin-right: 8px;
   filter: saturate(0%) brightness(1.0);
 }

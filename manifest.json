@@ -5,7 +5,8 @@
   "permissions": [
     "contextMenus",
     "storage",
-    "activeTab"
+    "activeTab",
+    "bookmarks"
   ],
   "background": {
     "service_worker": "frontend/dist/background.js"
