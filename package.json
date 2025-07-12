@@ -20,6 +20,12 @@
   "homepage": "https://github.com/vilmenayjatwit/verifyit-extension#readme",
   "devDependencies": {
     "@types/chrome": "^0.0.326",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.13",
+    "jest": "^30.0.4",
+    "jest-environment-jsdom": "^30.0.4",
+    "sinon-chrome": "^3.0.1",
+    "ts-jest": "^29.4.0",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3",
     "webpack": "^5.99.9",

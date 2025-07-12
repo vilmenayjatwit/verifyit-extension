@@ -410,3 +410,138 @@ textarea {
   transition: background 0.2s ease-out;
 }
 
+/* ─── BOOKMARKS PAGE HEADER ─── */
+#bookmarksScene .header.results-header {
+  display: block;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+#bookmarksScene .header.results-header h1 {
+  font-family: 'Scripto-2OR2v', cursive;
+  font-size: 35px;
+  color: #fff;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* ─── BOOKMARKS LIST ─── */
+/* Reuse the same .results-box and .result-card styles, so your cards look identical */
+#bookmarksScene .results-box {
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+#bookmarksScene .result-card {
+  /* already defined under .result-card, so no changes needed */
+}
+
+/* ─── BACK BUTTON IN BOOKMARKS HEADER ─── */
+#backFromBookmarks {
+  display: inline-block;
+  margin-left: 0;
+  margin-top: 0px;
+}
+#backFromBookmarks .search-btn {
+  /* same pill-button style as your BACK in resultsScene */
+  --cut: 0.15em;
+  --hue: 120;
+  font-size: 16px;
+  padding: 0.5em 1em;
+}
+#backFromBookmarks .backdrop { background: #ffffff; }
+#backFromBookmarks .text     { color: #fff; background: none; }
+#backFromBookmarks path     { fill: white; stroke: white; }
+
+/* ─── BOOKMARKS CARD EFFECTS ─── */
+
+/* Base transition and stacking for shine */
+#bookmarksScene .result-card {
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, transform 0.1s ease;
+}
+
+/* Radial “glint” overlay */
+#bookmarksScene .result-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 150px at var(--x, 50%) var(--y, 50%),
+    rgba(255,255,255,0.3) 0%,
+    rgba(255,255,255,0.0) 100%
+  );
+  transition: background 0.2s ease-out;
+}
+
+/* Hover lift + green glow + tinted background + inverted text */
+#bookmarksScene .result-card:hover {
+  box-shadow:
+    0 0 2px 5px rgba(66, 222, 82, 0.8),
+    inset 0 0 5px rgba(66, 222, 82, 0.5);
+  transform: translateY(-2px);
+  background: rgba(13, 153, 27, 0.6);
+  color: #fff !important;
+  border-color: #fff !important;
+}
+
+/* Shine follows the mouse */
+#bookmarksScene .result-card:hover::before {
+  background: radial-gradient(
+    circle 120px at var(--x) var(--y),
+    rgba(255,255,255,0.4) 0%,
+    transparent 80%
+  );
+}
+
+/* Make the parent a positioning context */
+#bookmarksScene {
+  position: relative;
+}
+
+/* Pin that back button to the bottom‐left */
+#backFromBookmarks {
+  position: absolute;
+  bottom: 12px;   /* distance from the bottom of the popup */
+  left:   12px;   /* distance from the left edge */
+  margin:  0;     /* override any existing margins */
+}
+
+/* Keep the pill styling you already have */
+#backFromBookmarks .search-btn {
+  --cut: 0.15em;
+  --hue: 120;
+  font-size: 16px;
+  padding: 0.5em 1em;
+}
+#backFromBookmarks .backdrop { background: #fff; }
+#backFromBookmarks .text     { color: #fff; background: none; }
+#backFromBookmarks path      { fill: white; stroke: white; }
+
+/* ─── BOOKMARKS LIST SCROLL ─── */
+#bookmarksScene {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#bookmarksList {
+  flex: 1;            /* fill available vertical space */
+  overflow-y: auto;   /* enable vertical scrolling */
+  padding-right: 4px; /* avoid scrollbar overlap */
+  margin-bottom: 12px;/* space above the bottom back button */
+}
+
+/* Optional: style the scrollbar (WebKit) */
+#bookmarksList::-webkit-scrollbar {
+  width: 6px;
+}
+#bookmarksList::-webkit-scrollbar-thumb {
+  background-color: rgba(255,255,255,0.3);
+  border-radius: 3px;
+}

@@ -6,27 +6,74 @@ interface Article {
   snippet:     string;
   url:         string;
   publishDate: string;
-  score?:      number;  // filled in by the background
+  score?:      number;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   // Scenes
-  const searchScene  = document.getElementById("searchScene")! as HTMLDivElement;
-  const resultsScene = document.getElementById("resultsScene")! as HTMLDivElement;
-  const resultsList  = document.getElementById("resultsList")! as HTMLDivElement;
-  const backBtn      = document.getElementById("backBtn")! as HTMLButtonElement;
+  const searchScene      = document.getElementById("searchScene")! as HTMLDivElement;
+  const resultsScene     = document.getElementById("resultsScene")! as HTMLDivElement;
+  const bookmarksScene   = document.getElementById("bookmarksScene")! as HTMLDivElement;
 
-  // Original elements
-  const submitBtn = document.getElementById("submitBtn")! as HTMLButtonElement;
-  const userInput = document.getElementById("userInput")! as HTMLInputElement;
-  const errorText = document.getElementById("error")! as HTMLDivElement;
+  // Lists
+  const resultsList      = document.getElementById("resultsList")! as HTMLDivElement;
+  const bookmarksList    = document.getElementById("bookmarksList")! as HTMLDivElement;
 
-  // Wire up Back button
+  // Buttons
+  const backBtn           = document.getElementById("backBtn")! as HTMLButtonElement;
+  const backFromBookmarks = document.getElementById("backFromBookmarks")! as HTMLButtonElement;
+  const submitBtn         = document.getElementById("submitBtn")! as HTMLButtonElement;
+  const bookmarksBtn      = document.getElementById("bookmarksBtn")! as HTMLButtonElement;
+
+  // Inputs and text
+  const userInput         = document.getElementById("userInput")! as HTMLInputElement;
+  const errorText         = document.getElementById("error")! as HTMLDivElement;
+
+  // Back to Search
   backBtn.addEventListener("click", () => {
     resultsList.innerHTML = "";
-    resultsScene.style.display = "none";
-    searchScene.style.display  = "block";
-    errorText.textContent = "";
+    resultsScene.style.display     = "none";
+    bookmarksScene.style.display   = "none";
+    searchScene.style.display      = "block";
+    errorText.textContent          = "";
+  });
+
+  // View Bookmarks (limit to 10)
+  bookmarksBtn.addEventListener("click", () => {
+    chrome.storage.local.get({ bookmarks: [] }, ({ bookmarks }) => {
+      // Limit to the 10 most recent
+      const toShow = bookmarks.slice(-10);
+
+      bookmarksList.innerHTML = "";
+      if (toShow.length === 0) {
+        const msg = document.createElement("div");
+        msg.textContent = "No bookmarks yet.";
+        bookmarksList.appendChild(msg);
+      } else {
+        toShow.forEach((b: any) => {
+          const link = document.createElement("a");
+          link.className   = "result-card";
+          link.href        = b.url;
+          link.target      = "_blank";
+          link.rel         = "noopener noreferrer";
+          link.textContent = b.title;
+          bookmarksList.appendChild(link);
+        });
+      }
+
+      // Swap scenes
+      searchScene.style.display     = "none";
+      resultsScene.style.display    = "none";
+      bookmarksScene.style.display  = "block";
+    });
+  });
+
+  // Back from Bookmarks
+  backFromBookmarks.addEventListener("click", () => {
+    bookmarksScene.style.display  = "none";
+    searchScene.style.display     = "block";
+    resultsScene.style.display    = "none";
+    errorText.textContent         = "";
   });
 
   // Centralized fetch + ranking + render
@@ -35,8 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
       errorText.textContent = "Searching for sources...";
       resultsList.innerHTML = "";
 
-      // 1️⃣ Fetch raw SerpAPI results
-      const res = await fetch("http://localhost:8000/search", {
+      const res  = await fetch("http://localhost:8000/search", {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
         body:    JSON.stringify({ query: text })
@@ -49,16 +95,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // 2️⃣ Map to Article[]
       const rawArticles: Article[] = data.organic_results.map((r: any) => ({
-        title:       r.title      || "Untitled",
-        snippet:     r.snippet    || "",
-        url:         r.link       || "#",
-        publishDate: r.publish_date || ""  // if available
+        title:       r.title           || "Untitled",
+        snippet:     r.snippet         || "",
+        url:         r.link            || "#",
+        publishDate: r.publish_date    || ""
       }));
       console.log("Mapped rawArticles:", rawArticles);
 
-      // 3️⃣ Send to background for AI ranking
       chrome.runtime.sendMessage(
         { type: "RANK", query: text, articles: rawArticles },
         (top3: Article[]) => {
@@ -77,13 +121,10 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error("Fetch error:", err);
       errorText.textContent = "An error occurred. Please try again.";
-      // fallback: show first 3 raw if available
-      // resultsList.innerHTML = "";
-      // renderUnranked(data.organic_results.slice(0,3));
     } finally {
-      // swap scenes (we’ll populate resultsList in the callbacks)
-      searchScene.style.display  = "none";
-      resultsScene.style.display = "block";
+      searchScene.style.display     = "none";
+      resultsScene.style.display    = "block";
+      bookmarksScene.style.display  = "none";
     }
   }
 
