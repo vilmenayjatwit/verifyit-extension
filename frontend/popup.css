@@ -412,17 +412,28 @@ textarea {
 
 /* ─── BOOKMARKS PAGE HEADER ─── */
 #bookmarksScene .header.results-header {
-  display: block;
-  text-align: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;  /* keep “Bookmarks” centered */
   margin-bottom: 16px;
 }
+
+/* Pin that 🔙 right beside the title */
+#backFromBookmarks {
+  position: absolute;  
+  top: 12px;      /* tweak to match your header’s padding */
+  left: 0px;     /* same horizontal inset as your other UI */
+}
+
 
 #bookmarksScene .header.results-header h1 {
   font-family: 'Scripto-2OR2v', cursive;
   font-size: 35px;
   color: #fff;
-  margin-top: 10px;
+  margin-top: 15px;
   margin-bottom: 10px;
+  margin-left: 60px;
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
 }
 
@@ -445,6 +456,7 @@ textarea {
   margin-left: 0;
   margin-top: 0px;
 }
+
 #backFromBookmarks .search-btn {
   /* same pill-button style as your BACK in resultsScene */
   --cut: 0.15em;
@@ -504,14 +516,6 @@ textarea {
   position: relative;
 }
 
-/* Pin that back button to the bottom‐left */
-#backFromBookmarks {
-  position: absolute;
-  bottom: 12px;   /* distance from the bottom of the popup */
-  left:   12px;   /* distance from the left edge */
-  margin:  0;     /* override any existing margins */
-}
-
 /* Keep the pill styling you already have */
 #backFromBookmarks .search-btn {
   --cut: 0.15em;
@@ -523,25 +527,32 @@ textarea {
 #backFromBookmarks .text     { color: #fff; background: none; }
 #backFromBookmarks path      { fill: white; stroke: white; }
 
-/* ─── BOOKMARKS LIST SCROLL ─── */
-#bookmarksScene {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+/* ─── SMALLER BOOKMARKS CARDS ─── */
+#bookmarksScene .result-card {
+  /* Width & spacing */
+  max-width: 280px;      /* narrower than your main cards */
+  margin: 6px auto;      /* vertical spacing plus center horizontally */
+  
+  /* Padding & text size */
+  padding: 10px 12px;    /* less padding so the card is more compact */
+  font-size: 10px;       /* slightly smaller text */
+
+  /* Optional: adjust height if you have a fixed size in mind */
+  /* height: 50px; overflow: hidden; */ 
 }
 
-#bookmarksList {
-  flex: 1;            /* fill available vertical space */
-  overflow-y: auto;   /* enable vertical scrolling */
-  padding-right: 4px; /* avoid scrollbar overlap */
-  margin-bottom: 12px;/* space above the bottom back button */
+/* If you want the title to wrap sooner, reduce line-height or set a fixed height: */
+#bookmarksScene .result-card {
+  line-height: 1.2;      /* tighter line spacing */
 }
 
-/* Optional: style the scrollbar (WebKit) */
-#bookmarksList::-webkit-scrollbar {
-  width: 6px;
-}
-#bookmarksList::-webkit-scrollbar-thumb {
-  background-color: rgba(255,255,255,0.3);
-  border-radius: 3px;
+/* ─── EMPTY STATE MESSAGE ─── */
+#bookmarksList .empty-message {
+  color: #ccc;                   /* light gray text */
+  font-size: 16px;               /* larger, readable size */
+  font-style: italic;            /* italic if you like */
+  text-align: center;            /* center horizontally */
+  margin: 40px auto 0 auto;      /* push it down, auto‐center */
+  width: 100%;                   /* full width for centering */
+  line-height: 1.5;              /* breathing room */
 }

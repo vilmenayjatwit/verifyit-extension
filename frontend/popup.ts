@@ -38,16 +38,17 @@ document.addEventListener("DOMContentLoaded", () => {
     errorText.textContent          = "";
   });
 
-  // View Bookmarks (limit to 10)
+  // View Bookmarks (limit to 5)
   bookmarksBtn.addEventListener("click", () => {
     chrome.storage.local.get({ bookmarks: [] }, ({ bookmarks }) => {
-      // Limit to the 10 most recent
-      const toShow = bookmarks.slice(-10);
+      // Limit to the 5 most recent
+      const toShow = bookmarks.slice(-5);
 
       bookmarksList.innerHTML = "";
       if (toShow.length === 0) {
         const msg = document.createElement("div");
-        msg.textContent = "No bookmarks yet.";
+        msg.textContent = "No Bookmarks Saved.";
+        msg.className   = "empty-message";
         bookmarksList.appendChild(msg);
       } else {
         toShow.forEach((b: any) => {
