@@ -11,6 +11,7 @@ interface Article {
 
 document.addEventListener("DOMContentLoaded", () => {
   // Scenes
+  const toast = document.getElementById("toast")! as HTMLDivElement;
   const searchScene      = document.getElementById("searchScene")! as HTMLDivElement;
   const resultsScene     = document.getElementById("resultsScene")! as HTMLDivElement;
   const bookmarksScene   = document.getElementById("bookmarksScene")! as HTMLDivElement;
@@ -129,19 +130,49 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function renderRanked(articles: Article[]) {
-    resultsList.innerHTML = "";
-    articles.forEach(item => {
-      const card = document.createElement("a");
-      card.className   = "result-card";
-      card.href        = item.url;
-      card.target      = "_blank";
-      card.rel         = "noopener noreferrer";
-      card.textContent = `${item.title} (${(item.score||0).toFixed(2)})`;
-      resultsList.appendChild(card);
+function renderRanked(articles: Article[]) {
+  resultsList.innerHTML = "";
+
+  articles.forEach(item => {
+    // 1) container
+    const wrapper = document.createElement("div");
+    wrapper.className = "result-item";
+
+    // 2) the existing card
+    const card = document.createElement("a");
+    card.className = "result-card";
+    card.href      = item.url;
+    card.target    = "_blank";
+    card.rel       = "noopener noreferrer";
+    card.textContent = `${item.title} (${(item.score||0).toFixed(2)})`;
+
+    // 3) the bookmark icon
+    const icon = document.createElement("button");
+    icon.className = "bookmark-icon";
+    icon.innerText = "🔖";  // or swap in your SVG
+    icon.addEventListener("click", () => {
+      // save this article
+      chrome.storage.local.get({ bookmarks: [] }, ({ bookmarks }) => {
+        bookmarks.push({
+          title: item.title,
+          url:   item.url,
+          publishDate: item.publishDate
+        });
+        chrome.storage.local.set({ bookmarks }, () => {
+          showToast("Article Saved");
+        });
+      });
     });
-    attachShineEffect();
-  }
+
+    // 4) assemble and attach
+    wrapper.appendChild(card);
+    wrapper.appendChild(icon);
+    resultsList.appendChild(wrapper);
+  });
+
+  attachShineEffect();
+}
+
 
   function renderUnranked(articles: Article[]) {
     resultsList.innerHTML = "";
@@ -173,6 +204,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  function showToast(msg: string) {
+  toast.textContent = msg;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 1500);
+}
+
 
   // Manual submission
   submitBtn.addEventListener("click", () => {
