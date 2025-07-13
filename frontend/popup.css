@@ -625,3 +625,29 @@ textarea {
   gap: 5px;             /* increase or decrease as you like */
 }
 
+/* ─── BOOKMARK ITEM ROW ─── */
+#bookmarksList .bookmark-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 6px 0;
+}
+
+/* shrink the card so it sits nicely next to the X */
+#bookmarksList .bookmark-item .result-card {
+  flex: 1;
+  margin-right: 8px;
+}
+
+/* style the remove button */
+#bookmarksList .bookmark-remove {
+  background: none;
+  border: none;
+  color: #e74c3c;         /* red X */
+  font-size: 1.2em;
+  cursor: pointer;
+  padding: 4px;
+}
+#bookmarksList .bookmark-remove:hover {
+  color: #c0392b;
+}
