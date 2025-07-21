@@ -3,14 +3,14 @@
 // 1. Import only the core API (no auto backends)
 import * as tf from "@tensorflow/tfjs-core";
 // 2. Manually pull in exactly one backend
-import "@tensorflow/tfjs-backend-cpu";
+import "@tensorflow/tfjs-backend-webgl";
 // 3. Then pull in the USE model
 import * as use from "@tensorflow-models/universal-sentence-encoder";
 
 // === Load the USE model once, after setting the backend ===
 console.log("🔁 Starting TF.js + USE initialization…");
 const modelPromise: Promise<use.UniversalSentenceEncoder> = (async () => {
-  await tf.setBackend("cpu");
+  await tf.setBackend("webgl");
   await tf.ready();
   console.log("✅ TF.js backend:", tf.getBackend());
   const model = await use.load();

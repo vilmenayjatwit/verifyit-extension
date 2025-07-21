@@ -62,7 +62,7 @@ html, body {
   flex-direction: column;
   gap: 15px;
   overflow: hidden;
-  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.75)
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.75);
 }
 
 h1 { font-size: 47px; margin: 0;}
@@ -81,7 +81,7 @@ h1 { font-size: 47px; margin: 0;}
 textarea {
   width: 100%;
   height: 173px;
-  margin: 10px 5;
+  margin: 10px 5px;
   padding: 10px;
   border-radius: 20px;
   font-size: 14px;
@@ -310,13 +310,13 @@ textarea {
   display: block;
   /* ← change these two values to move your Back button: */
   margin-left: 0px;     /* ← move it right/left */
-  margin-top: 13px;      /* ← move it down/up */
+  margin-top: 4px;      /* ← move it down/up */
   margin-bottom: 0;      /* space below if needed */
 }
 
 #backWrapper .search-btn {
   /* increase these to make the pill bigger */
-  padding: 1em 1em;      /* vertical | horizontal padding */
+  padding: 1em 3em;      /* vertical | horizontal padding */
   font-size: 5px;       /* text size */
 }
 
@@ -429,13 +429,24 @@ textarea {
 
 #bookmarksScene .header.results-header h1 {
   font-family: 'Scripto-2OR2v', cursive;
-  font-size: 35px;
+  font-size: 40px;
   color: #fff;
-  margin-top: 15px;
+  margin-top: 13px;
   margin-bottom: 10px;
-  margin-left: 60px;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+  margin-left: 75px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
+
+/* ─── two-tone “Bookmarks” heading ─── */
+#bookmarksScene .header.results-header h1 .book {
+  color: #0d991b;  /* green for “Book” */
+  text-shadow: 2px 2px 0px #ffffff;
+}
+#bookmarksScene .header.results-header h1 .marks {
+  color: #ffffff;  /* white for “marks” */
+  text-shadow: 2px 2px 0px #0d991b;
+}
+
 
 /* ─── BOOKMARKS LIST ─── */
 /* Reuse the same .results-box and .result-card styles, so your cards look identical */
@@ -651,3 +662,30 @@ textarea {
 #bookmarksList .bookmark-remove:hover {
   color: #c0392b;
 }
+
+/* two‐tone heading */
+#resultsTitle .results-word1 {
+  color: #0d991b;   /* e.g. gold */
+  text-shadow: 2px 2px 0px #ffffff;
+}
+#resultsTitle .results-word2 {
+  color: #ffffff;   /* e.g. deep sky blue */
+  text-shadow: 2px 2px 0px #0d991b;
+}
+
+/* ─── WHITE GLOW FOR BACK BUTTONS ─── */
+/* both in Results and in Bookmarks */
+#backWrapper  .search-btn,
+#backFromBookmarks .search-btn {
+  /* override the green HSL glow by resetting --hue to 0 (red) –
+     but since 0/60/?? won’t actually give you white, we’ll
+     also override the box-shadow directly below */
+  --hue: 0;
+}
+
+#backWrapper  .search-btn::before,
+#backFromBookmarks .search-btn::before {
+  /* override the little “halo” border */
+  border-color: rgba(255,255,255,0.5) !important;
+}
+
